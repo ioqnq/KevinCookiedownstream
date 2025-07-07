@@ -37,8 +37,8 @@ jobs:
           GH_REPO: ${{ github.repository }}
           TITLE: Team sync
           ASSIGNEES: none
-          LABELS: D3-TBF PARSER
+          LABELS: D3-TBF PARSER,P1-CRITICAL
           BODY: |
             After finishing #41 , use the resulting information to update out library to be up-to-date w/r/t to features with upstream crate. Note that it is still necessary that we do not use static lifetimes.
           PINNED: false
-          CLOSE_PREVIOUS: false
+          CLOSE_PREVIOUS: true
