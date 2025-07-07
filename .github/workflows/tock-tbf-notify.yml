@@ -1,4 +1,4 @@
-name: Update tbf-parser
+name: Update tbf-parser clone
 on:
   schedule:
     - cron: 00 10 * * *
