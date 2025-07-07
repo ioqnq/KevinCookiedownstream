@@ -6,13 +6,13 @@ on:
 
 jobs:
   create_issue:
-    name: U
+    name: Create issue
     runs-on: ubuntu-latest
     permissions:
       issues: write
       contents: read
     steps:
-      - name: Bring updates from 'tock-tbf' to 'tbf-parser' 
+      - name: Create issue
         run: |
           if [[ $CLOSE_PREVIOUS == true ]]; then
             previous_issue_number=$(gh issue list \
@@ -35,7 +35,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          TITLE: Team sync
+          TITLE: Bring updates from 'tock-tbf' to 'tbf-parser'
           ASSIGNEES: none
           LABELS: D3-TBF PARSER,P1-CRITICAL
           BODY: |
