@@ -1,4 +1,4 @@
-name: Update tbf-parser clone
+name: Update tbf-parser
 on:
   schedule:
     - cron: 00 10 * * *
@@ -35,7 +35,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          TITLE: Bring updates from 'tock-tbf' to 'tbf-parser'
+          TITLE: Bring updates from 'tock-tbf' to 'tbf-parser' clone
           ASSIGNEES: ioqnq
           LABELS: D3-TBF PARSER,P1-CRITICAL
           BODY: |
