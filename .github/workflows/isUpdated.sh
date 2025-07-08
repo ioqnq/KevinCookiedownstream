@@ -8,5 +8,8 @@ DAYS_SINCE_COMMIT=$(curl -s "url -s https://api.github.com/repos/ioqnq/KevinCook
 
 NOW=$(date +%s)
 DIFF_DAYS=$(( (NOW - DAYS_SINCE_COMMIT) / 60 / 60 / 24 ))
+echo $DIFF_DAYS
+DIFF_MINS=$(( (NOW - DAYS_SINCE_COMMIT) / 60))
+echo $DIFF_MINS
 
 exit $DIFF_DAYS
