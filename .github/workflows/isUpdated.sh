@@ -7,12 +7,12 @@ RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookieCompany/commit
 echo "📦 API raw response:"
 echo "$RESPONSE"
 
-# Try to extract the commit date from the first commit
 COMMIT_DATE=$(echo "$RESPONSE" | jq -r ".[0].commit.author.date")
 
-# Validate the extracted date
 if [[ "$COMMIT_DATE" == "null" || -z "$COMMIT_DATE" ]]; then
-  echo "❌ Error: Could not extract a valid commit date. The path or branch may be wro"
+  echo "❌ Error: Could not extract a valid commit date. The path or branch may be wrong."
+  exit 1
+fi
 
 
 NOW=$(date +%s)
