@@ -2,7 +2,7 @@
 
 TARGET_FILE="tock-tbf/src"
 
-RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookieCompany/commits?path=$TARGET_FILE&sha=main")
+RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookieCompany.com/commits?path=$TARGET_FILE&sha=main")
 
 echo "📦 API raw response:"
 echo "$RESPONSE"
