@@ -1,7 +1,7 @@
 name: Notify
 on:
   workflow_run:
-    workflows: ["trigger"]
+    workflows: ["notify-trigger"]
     types: [completed]
 
   workflow_dispatch:
