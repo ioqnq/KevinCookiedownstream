@@ -25,6 +25,7 @@ jobs:
               --label "$LABELS" \
               --json title \
               --jq '.[0].title')
+            echo "previous issue name: $previous_issue_name"
             if [[ -n $previous_issue_number && "$previous_issue_name" == "$TITLE" ]]; then
               gh issue close "$previous_issue_number"
               gh issue unpin "$previous_issue_number"
