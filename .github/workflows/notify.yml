@@ -11,6 +11,33 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - run: echo ok
+      - name: Create issue
+        run: |
+          if [[ $CLOSE_PREVIOUS == true ]]; then
+            previous_issue_number=$(gh issue list \
+              --label "$LABELS" \
+              --json number \
+              --jq '.[0].number')
+            if [[ -n $previous_issue_number ]]; then
+              gh issue close "$previous_issue_number"
+              gh issue unpin "$previous_issue_number"
+            fi
+          fi
+          new_issue_url=$(gh issue create \
+            --title "$TITLE" \
+            --assignee "$ASSIGNEES" \
+            --label "$LABELS" \
+            --body "$BODY")
+          if [[ $PINNED == true ]]; then
+            gh issue pin "$new_issue_url"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: Bring updates from 'tock-tbf' to 'tbf-parser'
+          ASSIGNEES: unassigned
+          LABELS: D3-TBF PARSER,P1-CRITICAL
+          BODY: |
+            After finishing #41 , use the resulting information to update out library to be up-to-date w/r/t to features with upstream crate. Note that it is still necessary that we do not use static lifetimes.
+          PINNED: false
+          CLOSE_PREVIOUS: false
