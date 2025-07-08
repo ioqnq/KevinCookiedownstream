@@ -2,7 +2,7 @@
 
 TARGET_FILE="tock-tbf/src"
 
-DAYS_SINCE_COMMIT=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookieCompany/commits?path=$TARGET_FILE&sha=REL1_36" \
+DAYS_SINCE_COMMIT=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookieCompany/commits?path=$TARGET_FILE&sha=main" \
   | jq -r ".[0].commit.author.date" \
   | xargs -I{} date -d {} +%s)
 
