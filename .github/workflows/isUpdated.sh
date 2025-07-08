@@ -12,7 +12,7 @@ COMMIT_DATE=$(echo "$RESPONSE" | jq -r ".[0].commit.author.date")
 
 # Validate the extracted date
 if [[ "$COMMIT_DATE" == "null" || -z "$COMMIT_DATE" ]]; then
-  echo "❌ Error: Could not extract a valid commit date. The path or branch may be wro
+  echo "❌ Error: Could not extract a valid commit date. The path or branch may be wro"
 
 
 NOW=$(date +%s)
