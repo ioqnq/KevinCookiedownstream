@@ -2,9 +2,18 @@
 
 TARGET_FILE="tock-tbf/src"
 
-DAYS_SINCE_COMMIT=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookieCompany/commits?path=$TARGET_FILE&sha=main" \
-  | jq -r ".[0].commit.author.date" \
-  | xargs -I{} date -d {} +%s)
+RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookieCompany/commits?path=$TARGET_FILE&sha=main")
+
+echo "📦 API raw response:"
+echo "$RESPONSE"
+
+# Try to extract the commit date from the first commit
+COMMIT_DATE=$(echo "$RESPONSE" | jq -r ".[0].commit.author.date")
+
+# Validate the extracted date
+if [[ "$COMMIT_DATE" == "null" || -z "$COMMIT_DATE" ]]; then
+  echo "❌ Error: Could not extract a valid commit date. The path or branch may be wro
+
 
 NOW=$(date +%s)
 
