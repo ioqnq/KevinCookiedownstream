@@ -16,21 +16,17 @@ jobs:
     steps:
       - name: Create issue
         run: |
-          if [[ $CLOSE_PREVIOUS == true ]]; then
-            previous_issue_number=$(gh issue list \
-              --label "$LABELS" \
-              --json number \
-              --jq '.[0].number')
-            previous_issue_name=$(gh issue list \
-              --label "$LABELS" \
-              --json title \
-              --jq '.[0].title')
-            echo "previous issue name: $previous_issue_name"
-            if [[ -n $previous_issue_number && "$previous_issue_name" == "$TITLE" ]]; then
-              gh issue close "$previous_issue_number"
-              gh issue unpin "$previous_issue_number"
-            fi
-          fi
+          mapfile -t matching_issues < <(gh issue list \
+            --label "$LABELS" \
+            --state all \
+            --json number,title \
+            --jq ".[] | select(.title == \"$TITLE\") | .number")
+          
+          for issue_number in "${matching_issues[@]}"; do
+            echo "Closing and unpinning issue #$issue_number with matching title"
+            gh issue close "$issue_number"
+            gh issue unpin "$issue_number" || echo "(Not pinned)"
+          done
           new_issue_url=$(gh issue create \
             --title "$TITLE" \
             --assignee "$ASSIGNEES" \
