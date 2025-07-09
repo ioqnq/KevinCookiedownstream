@@ -16,7 +16,7 @@ DIFF_MINS=$(( DIFF_SECS / 60 ))
 echo "Age in days: $DIFF_DAYS"
 echo "Age in minutes: $DIFF_MINS"
 
-if [$DIFF_DAYS -eq 0]; then
+if [ $DIFF_DAYS -eq 0 ]; then
   echo "0 days since last commit => notify"
   exit 0
 else
