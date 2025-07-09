@@ -2,7 +2,7 @@ name: notify-trigger
 
 on:
   schedule:
-    - cron:  '0/30 * * * *'
+    - cron:  '00 11 * * *'
 
   workflow_dispatch:
 
