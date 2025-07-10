@@ -35,7 +35,7 @@ jobs:
             echo "Up to date."
             exit 0
           else
-            echo "Different - must update
+            echo "Different - must update"
             
             CURR_COMM = $(echo "$RESPONSE" | jq -r ".[0].sha")
             i = 0
