@@ -48,10 +48,10 @@ jobs:
               i=$(expr $i + 1)
             done
 
-            for sha in ${!COMM_SHAS[@]}; do
-              echo "sha $sha is ${COMM_SHAS[$sha]}"
+            for idx in "${!COMM_SHAS[@]}"; do
+              echo "sha $idx is ${COMM_SHAS[$idx]}"
             done
-            
+    
             exit 1
           fi
 
