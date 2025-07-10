@@ -31,15 +31,15 @@ jobs:
           STORED_SHA=$(echo "$SHA_RESPONSE" | jq -r '.content' | base64 -d | tr -d '\n')
           echo "Last stored SHA: $STORED_SHA"
 
-          # if [ "$COMMIT_SHA" == "$STORED_SHA" ]; then
-          #   echo "Up to date."
-          #   exit 0
-          # else
-          #   echo "Different - must update
+          if [ "$COMMIT_SHA" == "$STORED_SHA" ]; then
+            echo "Up to date."
+            exit 0
+          else
+            echo "Different - must update
             
-          #   CURR_COMM = $(echo "$RESPONSE" | jq -r ".[0].sha")
-          #   i = 0
-          #   COMM_SHAS = ()
+            CURR_COMM = $(echo "$RESPONSE" | jq -r ".[0].sha")
+            i = 0
+            COMM_SHAS = ()
             
           #   while [ "$CURR_COMM" != "$STORED_SHA" ]
           #   do
