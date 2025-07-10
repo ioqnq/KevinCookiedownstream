@@ -35,18 +35,25 @@ jobs:
             echo "Up to date."
             exit 0
           else
-            echo "Different - must update"
+            echo "Different - must update
+            
+            CURR_COMM = $(echo "$RESPONSE" | jq -r ".[0].sha")
+            i = 0
+            COMM_SHAS = ()
+            
+            while [ "$CURR_COMM" != "$STORED_SHA" ]
+            do
+              CURR_COMM_SHA = $(echo "$RESPONSE" | jq -r ".[i].sha")
+              COMM_SHAS += ("$CURR_COM_SHA")
+              i=$(expr $i + 1)
+            done
+
+            for sha in ${!COMM_SHAS[@]}; do
+              echo "sha $sha is ${COMM_SHAS[$i]}"
+            done
+            
             exit 1
           fi
-          
-      - name: Read last commit sha
-        id: sha
-        uses: jaywcjlove/github-action-read-file@main
-        with:
-          path: .lastcommsha
-      
-      - name: Echo last sha
-        run: echo "${{ steps.sha.outputs.content }}"
 
           
 
