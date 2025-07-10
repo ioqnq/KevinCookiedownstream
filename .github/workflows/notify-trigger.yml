@@ -21,4 +21,14 @@ jobs:
           COMMIT_SHA=$(echo "$RESPONSE" | jq -r ".[0].sha")
           
           echo "Commit sha: $COMMIT_SHA"
+      - name: Read last commit sha
+        id: sha
+        uses: jaywcjlove/github-action-read-file@main
+        with:
+          path: .lastcommsha
+      
+      - name: Echo last sha
+        run: echo "${{ steps.sha.outputs.content }}"
+
+          
 
