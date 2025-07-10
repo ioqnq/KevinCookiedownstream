@@ -37,11 +37,10 @@ jobs:
           else
             echo "Different - must update"
             
-            CURR_COMM=$(echo "$RESPONSE" | jq -r ".[0].sha")
             i=0
             COMM_SHAS=()
             
-            while [ "$CURR_COMM" != "$STORED_SHA" ]
+            while [ "$CURR_COMM_SHA" != "$STORED_SHA" ]
             do
               CURR_COMM_SHA=$(echo "$RESPONSE" | jq -r ".[$i].sha")
               COMM_SHAS+=("$CURR_COMM_SHA")
@@ -51,7 +50,6 @@ jobs:
             for idx in "${!COMM_SHAS[@]}"; do
               echo "sha $idx is ${COMM_SHAS[$idx]}"
             done
-    
             exit 1
           fi
 
