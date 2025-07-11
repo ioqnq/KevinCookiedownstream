@@ -42,6 +42,9 @@ jobs:
             
             while [ "$CURR_COMM_SHA" != "$STORED_SHA" ]
             do
+              if [ "$CURR_COMM_SHA" == "$STORED_SHA" ]; then
+                  break
+              fi
               CURR_COMM_SHA=$(echo "$RESPONSE" | jq -r ".[$i].sha")
               COMM_SHAS+=("$CURR_COMM_SHA")
               i=$(expr $i + 1)
