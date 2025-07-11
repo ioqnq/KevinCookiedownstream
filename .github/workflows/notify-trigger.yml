@@ -17,11 +17,12 @@ jobs:
           TARGET_FILE="tock-tbf/src"
           
           RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookieCompany.com/commits?path=$TARGET_FILE&sha=main")
-          
+
+          # Find sha of last commit
           COMMIT_SHA=$(echo "$RESPONSE" | jq -r ".[0].sha")
-          
           echo "Commit sha: $COMMIT_SHA"
 
+          # Find sha stored in file
           SHA_RESPONSE=$(curl -s -L \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
@@ -31,6 +32,7 @@ jobs:
           STORED_SHA=$(echo "$SHA_RESPONSE" | jq -r '.content' | base64 -d | tr -d '\n')
           echo "Last stored SHA: $STORED_SHA"
 
+          # Check if the two match to check if we're up to date
           if [ "$COMMIT_SHA" == "$STORED_SHA" ]; then
             echo "Up to date."
             exit 0
@@ -39,7 +41,8 @@ jobs:
             
             i=0
             COMM_SHAS=()
-            
+
+            # Build array of shas that need to be listed in the issue
             while [ "$CURR_COMM_SHA" != "$STORED_SHA" ]
             do
               CURR_COMM_SHA=$(echo "$RESPONSE" | jq -r ".[$i].sha")
@@ -50,9 +53,31 @@ jobs:
               i=$(expr $i + 1)
             done
 
+            # Debug echo for array
             for idx in "${!COMM_SHAS[@]}"; do
               echo "sha $idx is ${COMM_SHAS[$idx]}"
             done
+
+            # Issue creation
+            mapfile -t matching_issues < <(gh issue list \
+            --label "$LABELS" \
+            --state open \
+            --json number,title \
+            --jq ".[] | select(.title == \"$TITLE\") | .number")
+          
+            for issue_number in "${matching_issues[@]}"; do
+              echo "Closing and unpinning issue #$issue_number with matching title"
+              gh issue close "$issue_number"
+              gh issue unpin "$issue_number" || echo "(Not pinned)"
+            done
+            new_issue_url=$(gh issue create \
+              --title "$TITLE" \
+              --assignee "$ASSIGNEES" \
+              --label "$LABELS" \
+              --body "$BODY")
+            if [[ $PINNED == true ]]; then
+              gh issue pin "$new_issue_url"
+            fi
             exit 1
           fi
 
