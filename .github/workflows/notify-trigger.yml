@@ -102,8 +102,8 @@ jobs:
                 # echo "Closing and unpinning issue #$issue_number with matching title"
                 # gh issue close "$issue_number"
                 # gh issue unpin "$issue_number" || echo "(Not pinned)"
-                gh issue edit "$issue_number" \ 
-                  --body "$BODY"$'\n'"$COMMIT_LIST
+                gh issue edit "$issue_number" \
+                  --body "$BODY"$'\n'"$COMMIT_LIST"
               done
             fi
 
