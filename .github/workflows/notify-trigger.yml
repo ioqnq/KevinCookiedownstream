@@ -104,6 +104,8 @@ jobs:
                 # gh issue unpin "$issue_number" || echo "(Not pinned)"
                 gh issue edit "$issue_number" \
                   --body "$BODY"$'\n'"$COMMIT_LIST"
+                gh issue comment "$issue_number" \
+                  --body "New commits were added."
               done
             fi
 
