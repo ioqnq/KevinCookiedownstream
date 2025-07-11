@@ -67,35 +67,35 @@ jobs:
               echo "sha $idx is ${COMM_MSGS[$idx]}"
             done
 
-          #   # Make commit markdown list
-          #   COMMIT_LIST=""
-          #   for sha in "${COMM_SHAS[@]}"; do
-          #     short_sha=$(git rev-parse --short "$sha")
-          #     url="https://github.com/ioqnq/KevinCookieCompany.com/commit/$sha"
-          #     message=$(git log -1 --pretty=%s "$sha")
-          #     COMMIT_LIST+="- [\`$short_sha\`]($url): $message"$'\n'
-          #   done
+            # Make commit markdown list
+            COMMIT_LIST=""
+            for idx in "${!COMM_SHAS[@]}"; do
+              short_sha=$(git rev-parse --short "${COMM_SHAS[$idx]")
+              url="https://github.com/ioqnq/KevinCookieCompany.com/commit/${COMM_SHAS[$idx]"
+              message=${COMM_MSGS[$idx]
+              COMMIT_LIST+="- [\`$short_sha\`]($url): $message"$'\n'
+            done
 
-          #   # Issue creation
-          #   mapfile -t matching_issues < <(gh issue list \
-          #   --label "$LABELS" \
-          #   --state open \
-          #   --json number,title \
-          #   --jq ".[] | select(.title == \"$TITLE\") | .number")
+            # Issue creation
+            mapfile -t matching_issues < <(gh issue list \
+            --label "$LABELS" \
+            --state open \
+            --json number,title \
+            --jq ".[] | select(.title == \"$TITLE\") | .number")
           
-          #   for issue_number in "${matching_issues[@]}"; do
-          #     echo "Closing and unpinning issue #$issue_number with matching title"
-          #     gh issue close "$issue_number"
-          #     gh issue unpin "$issue_number" || echo "(Not pinned)"
-          #   done
-          #   new_issue_url=$(gh issue create \
-          #     --title "$TITLE" \
-          #     --assignee "$ASSIGNEES" \
-          #     --label "$LABELS" \
-          #     --body "$BODY"$'\n'"$COMMIT_LIST")
-          #   if [[ $PINNED == true ]]; then
-          #     gh issue pin "$new_issue_url"
-          #   fi
+            for issue_number in "${matching_issues[@]}"; do
+              echo "Closing and unpinning issue #$issue_number with matching title"
+              gh issue close "$issue_number"
+              gh issue unpin "$issue_number" || echo "(Not pinned)"
+            done
+            new_issue_url=$(gh issue create \
+              --title "$TITLE" \
+              --assignee "$ASSIGNEES" \
+              --label "$LABELS" \
+              --body "$BODY"$'\n'"$COMMIT_LIST")
+            if [[ $PINNED == true ]]; then
+              gh issue pin "$new_issue_url"
+            fi
             exit 0
           fi
         env:
