@@ -3,6 +3,9 @@ name: notify-trigger
 on:
   schedule:
     - cron:  '00 11 * * *'
+  push:
+    paths:
+      - .lastcommsha
 
   workflow_dispatch:
 
