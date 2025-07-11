@@ -70,9 +70,9 @@ jobs:
             # Make commit markdown list
             COMMIT_LIST=""
             for idx in "${!COMM_SHAS[@]}"; do
-              short_sha=$(git rev-parse --short "${COMM_SHAS[$idx]")
-              url="https://github.com/ioqnq/KevinCookieCompany.com/commit/${COMM_SHAS[$idx]"
-              message=${COMM_MSGS[$idx]
+              short_sha=$(git rev-parse --short "${COMM_SHAS[$idx]}")
+              url="https://github.com/ioqnq/KevinCookieCompany.com/commit/${COMM_SHAS[$idx]}"
+              message="$(echo "${COMM_MSGS[$idx]}" | head -n1)"
               COMMIT_LIST+="- [\`$short_sha\`]($url): $message"$'\n'
             done
 
