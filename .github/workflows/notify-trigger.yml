@@ -44,15 +44,18 @@ jobs:
             
             i=0
             COMM_SHAS=()
+            COMM_MSGS=()
 
             # Build array of shas that need to be listed in the issue
             while [ "$CURR_COMM_SHA" != "$STORED_SHA" ]
             do
               CURR_COMM_SHA=$(echo "$RESPONSE" | jq -r ".[$i].sha")
+              CURR_COMM_MSG=$(echo "$RESPONSE" | jq -r ".[$i].commit.message")
               if [ "$CURR_COMM_SHA" == "$STORED_SHA" ]; then
                   break
               fi
               COMM_SHAS+=("$CURR_COMM_SHA")
+              COMM_MSGS+=("$CURR_COMM_MSG")
               i=$(expr $i + 1)
             done
 
@@ -60,12 +63,15 @@ jobs:
             for idx in "${!COMM_SHAS[@]}"; do
               echo "sha $idx is ${COMM_SHAS[$idx]}"
             done
+            for idx in "${!COMM_MSGS[@]}"; do
+              echo "sha $idx is ${COMM_MSGS[$idx]}"
+            done
 
             # Make commit markdown list
             COMMIT_LIST=""
             for sha in "${COMM_SHAS[@]}"; do
               short_sha=$(git rev-parse --short "$sha")
-              url="https://github.com/OWNER/REPO/commit/$sha"
+              url="https://github.com/ioqnq/KevinCookieCompany.com/commit/$sha"
               message=$(git log -1 --pretty=%s "$sha")
               COMMIT_LIST+="- [\`$short_sha\`]($url): $message"$'\n'
             done
@@ -86,7 +92,7 @@ jobs:
               --title "$TITLE" \
               --assignee "$ASSIGNEES" \
               --label "$LABELS" \
-              --body "$BODY$'\n'$COMMIT_LIST")
+              --body "$BODY"$'\n'"$COMMIT_LIST")
             if [[ $PINNED == true ]]; then
               gh issue pin "$new_issue_url"
             fi
