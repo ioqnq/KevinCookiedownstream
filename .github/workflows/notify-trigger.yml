@@ -61,6 +61,15 @@ jobs:
               echo "sha $idx is ${COMM_SHAS[$idx]}"
             done
 
+            # Make commit markdown list
+            COMMIT_LIST=""
+            for sha in "${COMM_SHAS[@]}"; do
+              short_sha=$(git rev-parse --short "$sha")
+              url="https://github.com/OWNER/REPO/commit/$sha"
+              message=$(git log -1 --pretty=%s "$sha")
+              COMMIT_LIST+="- [\`$short_sha\`]($url): $message"$'\n'
+            done
+
             # Issue creation
             mapfile -t matching_issues < <(gh issue list \
             --label "$LABELS" \
@@ -77,7 +86,7 @@ jobs:
               --title "$TITLE" \
               --assignee "$ASSIGNEES" \
               --label "$LABELS" \
-              --body "$BODY")
+              --body "$BODY$'\n'$COMMIT_LIST")
             if [[ $PINNED == true ]]; then
               gh issue pin "$new_issue_url"
             fi
@@ -90,7 +99,7 @@ jobs:
           ASSIGNEES: unassigned
           LABELS: D3-TBF PARSER,P1-CRITICAL
           BODY: |
-            After finishing #41 , use the resulting information to update out library to be up-to-date w/r/t to features with upstream crate. Note that it is still necessary that we do not use static lifetimes.
+            The following commits need to be accounted for:
           PINNED: false
           CLOSE_PREVIOUS: true
 
