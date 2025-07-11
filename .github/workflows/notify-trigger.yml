@@ -75,27 +75,36 @@ jobs:
               message="$(echo "${COMM_MSGS[$idx]}" | head -n1)"
               COMMIT_LIST+="- [\`$short_sha\`]($url): $message"$'\n'
             done
-
-            # Issue creation
+            
+            # Get matching issues
             mapfile -t matching_issues < <(gh issue list \
             --label "$LABELS" \
             --state open \
             --json number,title \
             --jq ".[] | select(.title == \"$TITLE\") | .number")
-          
-            for issue_number in "${matching_issues[@]}"; do
-              echo "Closing and unpinning issue #$issue_number with matching title"
-              gh issue close "$issue_number"
-              gh issue unpin "$issue_number" || echo "(Not pinned)"
-            done
-            new_issue_url=$(gh issue create \
-              --title "$TITLE" \
-              --assignee "$ASSIGNEES" \
-              --label "$LABELS" \
-              --body "$BODY"$'\n'"$COMMIT_LIST")
-            if [[ $PINNED == true ]]; then
-              gh issue pin "$new_issue_url"
+
+            # Check if issue already exists
+            if (( ${#matching_issues[@]} == 0 )); then
+                # Doesn't exist => new issue creation
+                echo "New issue creation"
+                new_issue_url=$(gh issue create \
+                  --title "$TITLE" \
+                  --assignee "$ASSIGNEES" \
+                  --label "$LABELS" \
+                  --body "$BODY"$'\n'"$COMMIT_LIST")
+                if [[ $PINNED == true ]]; then
+                  gh issue pin "$new_issue_url"
+                fi
+            else
+              # Exists => edit existing issue
+              echo "Issue already exists; editting and commenting on issue"
+            #   for issue_number in "${matching_issues[@]}"; do
+            #     echo "Closing and unpinning issue #$issue_number with matching title"
+            #     gh issue close "$issue_number"
+            #     gh issue unpin "$issue_number" || echo "(Not pinned)"
+            #   done
             fi
+
             exit 0
           fi
         env:
