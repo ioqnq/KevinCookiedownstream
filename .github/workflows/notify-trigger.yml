@@ -99,9 +99,6 @@ jobs:
               # Exists => edit existing issue
               echo "Issue already exists; editting and commenting on issue"
               for issue_number in "${matching_issues[@]}"; do
-                # echo "Closing and unpinning issue #$issue_number with matching title"
-                # gh issue close "$issue_number"
-                # gh issue unpin "$issue_number" || echo "(Not pinned)"
                 gh issue edit "$issue_number" \
                   --body "$BODY"$'\n'"$COMMIT_LIST"
                 gh issue comment "$issue_number" \
