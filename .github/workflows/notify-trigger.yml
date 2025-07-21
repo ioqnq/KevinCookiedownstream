@@ -45,7 +45,6 @@ jobs:
           for (( i=0; i<NUM_COMMITS; i++ )); do
               CURR_COMM_SHA=$(echo "$RESPONSE" | jq -r ".[$i].sha")
               if [ "$CURR_COMM_SHA" == "$STORED_SHA" ]; then
-                  echo "Reached stored SHA: $STORED_SHA"
                   FOUND=1
                   break
               fi
