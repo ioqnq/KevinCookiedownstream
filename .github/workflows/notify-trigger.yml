@@ -105,6 +105,7 @@ jobs:
                 gh issue edit "$issue_number" \
                   --body "$BODY"$'\n'"$COMMIT_LIST"
                 gh issue comment "$issue_number" \
+                  --edit-last \
                   --body "Commits list updated."
               done
             fi
