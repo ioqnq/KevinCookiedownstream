@@ -53,6 +53,7 @@ jobs:
           
           if [ "$FOUND" -eq 0 ]; then
               echo "Invalid SHA. Please double-check it."
+              exit 1
           fi
 
           # Check if the two shas match to check if we're up to date
