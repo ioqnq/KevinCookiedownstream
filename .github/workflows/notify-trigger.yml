@@ -106,6 +106,9 @@ jobs:
                 ISSUE_BODY=$(gh api repos/ioqnq/KevinCookiedownstream/issues/"$issue_number" --jq '.body')
                 # Compare old list with new list
                 # Check for changes between new list and old list
+                # Debug echoes for body comparison
+                echo "Old issue body: $ISSUE_BODY"
+                echo "New issue body: $BODY"$'\n'"$COMMIT_LIST"
                 if [[ "$ISSUE_BODY" != "$BODY"$'\n'"$COMMIT_LIST" ]]; then
                   echo "Bodies different => edit comment"
                   gh issue comment "$issue_number" \
