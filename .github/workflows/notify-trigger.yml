@@ -109,7 +109,7 @@ jobs:
                 if [[ "$ISSUE_BODY" != "$BODY"$'\n'"$COMMIT_LIST" ]]; then
                   echo "Bodies different => edit comment"
                   gh issue comment "$issue_number" \
-                    --edit-last \
+                    --edit-last --create-if-none\
                     --body "Commits list updated."
                 else
                   echo "Bodies same => no comment"
