@@ -104,9 +104,19 @@ jobs:
               for issue_number in "${matching_issues[@]}"; do
                 gh issue edit "$issue_number" \
                   --body "$BODY"$'\n'"$COMMIT_LIST"
-                gh issue comment "$issue_number" \
-                  --edit-last \
-                  --body "Commits list updated."
+
+                # Extract commit body for comparison
+                ISSUE_BODY=$(gh api repos/ioqnq/KevinCookieCompany.com/issues/"$issue_number" --jq '.body')
+                # Compare old list with new list
+                # Check for changes between new list and old list
+                if [[ "$ISSUE_BODY" != "$BODY"$'\n'"$COMMIT_LIST" ]]
+                  echo "Bodies different => edit comment"
+                  gh issue comment "$issue_number" \
+                    --edit-last \
+                    --body "Commits list updated."
+                else
+                  echo "Bodies same => no comment"
+                fi
               done
             fi
 
