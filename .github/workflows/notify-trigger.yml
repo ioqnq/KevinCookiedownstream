@@ -117,9 +117,9 @@ jobs:
           GH_REPO: ${{ github.repository }}
           TITLE: Bring updates from 'tock-tbf' to 'tbf-parser'
           ASSIGNEES: unassigned
-          LABELS: D3-TBF PARSER,P1-CRITICAL
+          LABELS: D3-TBF PARSER,P1-CRITICAL,EXCLUSIVE LABEL
           BODY: |
-            Please review the commits in order of oldest to newest (top to bottom). Once you have implemented the corresponding updates, copy paste the sha of the commit you last covered in the text file at (path).The following commits need to be accounted for:
+            Please review the commits in order of oldest to newest (top to bottom). Once you have implemented the corresponding updates, copy paste the sha of the commit you last covered in the text file at (path). The following commits need to be accounted for:
           PINNED: false
           CLOSE_PREVIOUS: true
 
