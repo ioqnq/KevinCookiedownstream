@@ -109,7 +109,7 @@ jobs:
                 # Debug echoes for body comparison
                 echo "Old issue body: $ISSUE_BODY"
                 echo "New issue body: $BODY"$'\n'"$COMMIT_LIST"
-                if [[ "$ISSUE_BODY\n" != "$BODY"$'\n'"$COMMIT_LIST" ]]; then
+                if [[ "$ISSUE_BODY"$'\n' != "$BODY"$'\n'"$COMMIT_LIST" ]]; then
                   echo "Bodies different => edit comment"
                   gh issue comment "$issue_number" \
                     --edit-last --create-if-none\
