@@ -67,16 +67,16 @@ jobs:
             COMM_MSGS=()
 
             # Build array of shas that need to be listed in the issue
-            while [ "$CURR_COMM_SHA" != "$STORED_SHA" ]
-            do
-              CURR_COMM_SHA=$(echo "$RESPONSE" | jq -r ".[$i].sha")
-              CURR_COMM_MSG=$(echo "$RESPONSE" | jq -r ".[$i].commit.message")
-              if [ "$CURR_COMM_SHA" == "$STORED_SHA" ]; then
-                  break
-              fi
-              COMM_SHAS+=("$CURR_COMM_SHA")
-              COMM_MSGS+=("$CURR_COMM_MSG")
-              i=$(expr $i + 1)
+            for (( i=0; i<NUM_COMMITS; i++ )); do
+                CURR_COMM_SHA=$(echo "$RESPONSE" | jq -r ".[$i].sha")
+                CURR_COMM_MSG=$(echo "$RESPONSE" | jq -r ".[$i].commit.message")
+                
+                if [ "$CURR_COMM_SHA" == "$STORED_SHA" ]; then
+                    break
+                fi
+            
+                COMM_SHAS+=("$CURR_COMM_SHA")
+                COMM_MSGS+=("$CURR_COMM_MSG")
             done
 
             # Debug echo for array
