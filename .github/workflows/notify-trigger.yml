@@ -58,6 +58,23 @@ jobs:
           # Check if the two shas match to check if we're up to date
           if [ "$COMMIT_SHA" == "$STORED_SHA" ]; then
             echo "Up to date."
+            # Since we're up to date => close existing issue if open
+            
+            # Get existing issue
+            mapfile -t matching_open_issues < <(gh issue list \
+            --label "$LABELS" \
+            --state open \
+            --json number,title \
+            --jq ".[] | select(.title == \"$TITLE\") | .number")
+
+            # If open issue is found => close
+            if (( ${#matching_open_issues[@]} != 0 )); then
+              for issue_number in "${matching_open_issues[@]}"; do
+                echo "Closing issue..."
+                gh issue close "$issue_number"
+              done
+            fi
+            
             exit 0
           else
             echo "Different - must update"
@@ -99,7 +116,7 @@ jobs:
             # Get matching issues
             mapfile -t matching_issues < <(gh issue list \
             --label "$LABELS" \
-            --state open \
+            --state all \
             --json number,title \
             --jq ".[] | select(.title == \"$TITLE\") | .number")
 
@@ -117,6 +134,15 @@ jobs:
                 fi
             else
               # Exists => edit existing issue
+              # Check if issue is closed in order to open it
+              for issue_number in "${matching_issues[@]}"; do
+                ISSUE_STATE=$(gh api repos/ioqnq/KevinCookiedownstream/issues/"$issue_number" --jq '.state')
+                if [[ "$ISSUE_STATE" == "closed" ]]; then
+                  echo "Issue closed. Reopening..."
+                  gh issue reopen "$issue_number"
+                fi
+              done
+              
               echo "Issue already exists; editting and commenting on issue"
               for issue_number in "${matching_issues[@]}"; do
                 # Extract commit body for comparison
