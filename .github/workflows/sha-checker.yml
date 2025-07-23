@@ -18,6 +18,8 @@ jobs:
           echo "PR number: $PR_NO"
           
           # Get PR labels
+          labels="$(gh api repos/ioqnq/KevinCookiedownstream/$PR_NO --jq '.labels.[].name')"
+          echo "$labels"
 
           # Get changed files
           gh pr view "$PR_NO" --json files -q '.files[].path'
