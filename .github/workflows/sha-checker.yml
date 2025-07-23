@@ -18,7 +18,7 @@ jobs:
           # Get time stamp for last edit on sha
           SHA_RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookiedownstream/commits?path=.lastcommsha&sha=main")
           
-          SHA_DATE=$(echo "$SHA_RESPONSE" | jq -r ".[0].commit.commiter.date")
+          SHA_DATE=$(echo "$SHA_RESPONSE" | jq -r ".[0].commit.committer.date")
           
           SHA_TIME=$(date -d "$SHA_DATE" +%s)
           
