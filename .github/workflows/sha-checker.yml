@@ -13,4 +13,27 @@ jobs:
         uses: actions/checkout@v2
       - name: Check if sha file has been updated
         run: |
+          # Get time stamp for last edit on sha
+
+          # Get time of last tbf-parser PR
+          PR_RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookiedownstream/pulls")
+          
+          PR_DATE=$(echo "$PR_RESPONSE" | jq -r ".[0].created_at")
+          
+          PR_TIME=$(date -d "$PR_DATE" +%s)
+          NOW=$(date +%s)
+          
+          PR_MINS=$(( PR_TIME / 60 ))
+          echo "PR age in minutes: $PR_MINS"
+
+          # Check if sha edit at most 30 mins older than PR
+          # DIFF_MINS=$((NOW - PR_TIME))
+          # if [ $DIFF_DAYS -eq 0 ]; then
+          #   echo "Sha recently updated => merge OK"
+          #   exit 0
+          # else
+          #   echo "Please make sure you updated the lastcommsha file"
+          #   exit 1
+          # fi
+        
           
