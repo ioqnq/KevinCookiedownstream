@@ -11,21 +11,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v14.6
-      - name: List all changed files
+      - name: Check if files included in PR
         run: |
-          # Check if PR contains our label
-          # if [[  != 'EXCLUSIVE LABEL' ]]; then
-          #   echo PR doesn't contain label => don't run
-          #   exit 0
-          # fi
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
+          # Get PR number
+          PR_NO=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo "PR number: $PR_NO"
+          
+          # Get PR labels
+
+          # Get changed files
+          gh pr view PR_NO --json files -q '.files[].path'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # - name: Check if sha is included in PR changes
       #   run: |
           
