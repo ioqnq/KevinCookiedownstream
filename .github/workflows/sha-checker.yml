@@ -1,4 +1,4 @@
-name: notify-trigger
+name: sha-checker
 
 on:
   workflow_dispatch:
