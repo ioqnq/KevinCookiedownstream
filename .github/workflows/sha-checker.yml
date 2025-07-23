@@ -1,6 +1,7 @@
 name: sha-checker
 
 on:
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -11,42 +12,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Check if sha file has been updated
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v14.6
+      - name: List all changed files
         run: |
-          NOW=$(date +%s)
-          
-          # Get time stamp for last edit on sha
-          SHA_RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookiedownstream/commits?path=.lastcommsha&sha=main")
-          
-          SHA_DATE=$(echo "$SHA_RESPONSE" | jq -r ".[0].commit.committer.date")
-          
-          SHA_TIME=$(date -d "$SHA_DATE" +%s)
-          
-
-          SHA_SECS=$((NOW - SHA_TIME))
-          SHA_MINS=$(( SHA_SECS / 60 ))
-          echo "SHA age in minutes: $SHA_MINS"
-          
-          # Get time of last tbf-parser PR
-          PR_RESPONSE=$(curl -s "https://api.github.com/repos/ioqnq/KevinCookiedownstream/pulls")
-          
-          PR_DATE=$(echo "$PR_RESPONSE" | jq -r ".[0].created_at")
-          
-          PR_TIME=$(date -d "$PR_DATE" +%s)
-          
-
-          PR_SECS=$((NOW - PR_TIME))
-          PR_MINS=$(( PR_SECS / 60 ))
-          echo "PR age in minutes: $PR_MINS"
-
-          # Check if sha edit and PR at most 15 mins from eachother
-          DIFF_MINS=$((SHA_TIME - PR_TIME))
-          if (( DIFF_MINS > -15 && DIFF_MINS < 15 )); then
-            echo "Sha recently updated => merge OK"
+          if [[  != 'EXCLUSIVE LABEL' ]]; then
+            echo PR doesn't contain label => don't run
             exit 0
-          else
-            echo "Please make sure you updated the .lastcommsha file"
-            exit 1
           fi
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+      # - name: Check if sha is included in PR changes
+      #   run: |
+          
         
           
