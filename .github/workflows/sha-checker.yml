@@ -1,0 +1,16 @@
+name: notify-trigger
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Check if sha file has been updated
+        run: |
+          
