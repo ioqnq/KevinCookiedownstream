@@ -20,7 +20,7 @@ jobs:
           # Get PR labels
 
           # Get changed files
-          gh pr view PR_NO --json files -q '.files[].path'
+          gh pr view "$PR_NO" --json files -q '.files[].path'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
