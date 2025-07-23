@@ -39,14 +39,14 @@ jobs:
           PR_MINS=$(( PR_SECS / 60 ))
           echo "PR age in minutes: $PR_MINS"
 
-          # Check if sha edit at most 30 mins older than PR
-          # DIFF_MINS=$((NOW - PR_TIME))
-          # if [ $DIFF_DAYS -eq 0 ]; then
-          #   echo "Sha recently updated => merge OK"
-          #   exit 0
-          # else
-          #   echo "Please make sure you updated the lastcommsha file"
-          #   exit 1
-          # fi
+          # Check if sha edit and PR at most 15 mins from eachother
+          DIFF_MINS=$((SHA_TIME - PR_TIME))
+          if (( DIFF_MINS > -15 && DIFF_MINS < 15 )); then
+            echo "Sha recently updated => merge OK"
+            exit 0
+          else
+            echo "Please make sure you updated the .lastcommsha file"
+            exit 1
+          fi
         
           
