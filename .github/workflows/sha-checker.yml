@@ -31,9 +31,10 @@ jobs:
 
           # Get changed files
           files="$(gh pr view "$PR_NO" --json files -q '.files[].path')"
+          echo "$files"
 
           # Check if '.lastcommsha' among changed files
-          if [[ $filess =~ (.lastcommsha) ]]; then
+          if [[ $files =~ (.lastcommsha) ]]; then
             echo "File found."
             exit 0
           else
