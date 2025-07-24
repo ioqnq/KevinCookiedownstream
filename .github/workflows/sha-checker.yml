@@ -21,13 +21,17 @@ jobs:
           labels="$(gh api repos/ioqnq/KevinCookiedownstream/pulls/$PR_NO --jq '.labels.[].name')"
           echo "$labels"
 
+          # Check for exclusive label to continue operations
+          if [[ $labels =~ (EXCLUSIVE LABEL) ]]; then
+            echo "Label found. Continuing."
+          else
+            echo "Label not found. No sha-checker needed."
+            exit 0
+          fi
+
           # Get changed files
           gh pr view "$PR_NO" --json files -q '.files[].path'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Check if sha is included in PR changes
-      #   run: |
-          
         
           
