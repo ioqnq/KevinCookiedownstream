@@ -1,4 +1,4 @@
-name: notify-trigger
+name: issue-builder
 
 on:
   schedule:
