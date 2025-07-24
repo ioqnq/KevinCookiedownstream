@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Check if files included in PR
+      - name: Check if files included in appropriately labeled PRs
         run: |
           # Get PR number
           PR_NO=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
@@ -23,14 +23,24 @@ jobs:
 
           # Check for exclusive label to continue operations
           if [[ $labels =~ (EXCLUSIVE LABEL) ]]; then
-            echo "Label found. Continuing."
+            echo "Label found. Continuing..."
           else
             echo "Label not found. No sha-checker needed."
             exit 0
           fi
 
           # Get changed files
-          gh pr view "$PR_NO" --json files -q '.files[].path'
+          files="$(gh pr view "$PR_NO" --json files -q '.files[].path')"
+
+          # Check if '.lastcommsha' among changed files
+          if [[ $filess =~ (.lastcommsha) ]]; then
+            echo "File found."
+            exit 0
+          else
+            echo "File not found. Please make sure you update the sha within '.lastcommsha'."
+            exit 1
+          fi
+          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
