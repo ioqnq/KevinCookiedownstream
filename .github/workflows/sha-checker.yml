@@ -19,7 +19,7 @@ jobs:
           echo "PR number: $PR_NO"
           
           # Get PR labels
-          labels="$(gh api repos/${DOWNSTREAM}pulls/$PR_NO --jq '.labels.[].name')"
+          labels="$(gh api repos/${DOWNSTREAM}/pulls/$PR_NO --jq '.labels.[].name')"
           echo "$labels"
 
           # Check for exclusive label to continue operations
