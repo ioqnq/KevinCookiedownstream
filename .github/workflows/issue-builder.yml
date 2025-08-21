@@ -160,7 +160,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           UPSTREAM: "ioqnq/KevinCookieCompany.com"
-          DOWNSTREAM: "ioqnq/KevinCookiedownstream"
+          DOWNSTREAM: ${{ github.repository }}
           TITLE: Bring updates from 'tock-tbf' to 'tbf-parser'
           ASSIGNEES: unassigned
           LABELS: D3-TBF PARSER,P1-CRITICAL,EXCLUSIVE LABEL
