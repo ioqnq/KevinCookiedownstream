@@ -5,7 +5,7 @@ on:
     - cron:  '00 11 * * *'
   push:
     paths:
-      - .lastcommsha
+      - .github/.lastcommsha
 
   workflow_dispatch:
 
@@ -20,24 +20,20 @@ jobs:
         uses: actions/checkout@v2
       - name: Check for 'tock-tbf' updates
         run: |
-          TARGET_FILE="tock-tbf/src"
+          TARGET_FILE="libraries/tock-tbf"
           
-          RESPONSE=$(curl -s "https://api.github.com/repos/${UPSTREAM}/commits?path=$TARGET_FILE&sha=main")
-
+          RESPONSE=$(curl -s "https://api.github.com/repos/${UPSTREAM}/commits?path=$TARGET_FILE&sha=master")
           # Find sha of last commit
           COMMIT_SHA=$(echo "$RESPONSE" | jq -r ".[0].sha")
           echo "Commit sha: $COMMIT_SHA"
-
           # Find sha stored in file
           SHA_RESPONSE=$(curl -s -L \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/${DOWNSTREAM}/contents/.lastcommsha)
-
+          https://api.github.com/repos/${DOWNSTREAM}/contents/.github/.lastcommsha)
           STORED_SHA=$(echo "$SHA_RESPONSE" | jq -r '.content' | base64 -d | tr -d '\n')
           echo "Last stored SHA: $STORED_SHA"
-
           # Check if provided sha is valid
           NUM_COMMITS=$(echo "$RESPONSE" | jq length)
           FOUND=0
@@ -54,7 +50,6 @@ jobs:
               echo "Invalid SHA. Please double-check it."
               exit 1
           fi
-
           # Check if the two shas match to check if we're up to date
           if [ "$COMMIT_SHA" == "$STORED_SHA" ]; then
             echo "Up to date."
@@ -66,7 +61,6 @@ jobs:
             --state open \
             --json number,title \
             --jq ".[] | select(.title == \"$TITLE\") | .number")
-
             # If open issue is found => close
             if (( ${#matching_open_issues[@]} != 0 )); then
               for issue_number in "${matching_open_issues[@]}"; do
@@ -82,7 +76,6 @@ jobs:
             i=0
             COMM_SHAS=()
             COMM_MSGS=()
-
             # Build array of shas that need to be listed in the issue
             for (( i=0; i<NUM_COMMITS; i++ )); do
                 CURR_COMM_SHA=$(echo "$RESPONSE" | jq -r ".[$i].sha")
@@ -95,7 +88,6 @@ jobs:
                 COMM_SHAS+=("$CURR_COMM_SHA")
                 COMM_MSGS+=("$CURR_COMM_MSG")
             done
-
             # Debug echo for array
             for idx in "${!COMM_SHAS[@]}"; do
               echo "sha $idx is ${COMM_SHAS[$idx]}"
@@ -103,7 +95,6 @@ jobs:
             for idx in "${!COMM_MSGS[@]}"; do
               echo "sha $idx is ${COMM_MSGS[$idx]}"
             done
-
             # Make commit markdown list
             COMMIT_LIST=""
             for idx in "${!COMM_SHAS[@]}"; do
@@ -119,14 +110,12 @@ jobs:
             --state all \
             --json number,title \
             --jq ".[] | select(.title == \"$TITLE\") | .number")
-
             # Check if issue already exists
             if (( ${#matching_issues[@]} == 0 )); then
                 # Doesn't exist => new issue creation
                 echo "New issue creation"
                 new_issue_url=$(gh issue create \
                   --title "$TITLE" \
-                  --assignee "$ASSIGNEES" \
                   --label "$LABELS" \
                   --body "$BODY"$'\n'"$COMMIT_LIST")
                 if [[ $PINNED == true ]]; then
@@ -164,21 +153,16 @@ jobs:
                   --body "$BODY"$'\n'"$COMMIT_LIST"
               done
             fi
-
             exit 0
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           UPSTREAM: "ioqnq/KevinCookieCompany.com"
-          DOWNSTREAM: "ioqnq/KevinCookiedownstream"
+          DOWNSTREAM: ${{ github.repository }}
           TITLE: Bring updates from 'tock-tbf' to 'tbf-parser'
-          ASSIGNEES: unassigned
           LABELS: D3-TBF PARSER,P1-CRITICAL,EXCLUSIVE LABEL
           BODY: |
-            Please review the commits in order of oldest to newest (top to bottom). Once you have implemented the corresponding updates, copy-paste the sha of the commit you last covered in the text file at (path). Make sure to label any PRs addressing the commits in this list with 'EXCLUSIVE LABEL' (if you added this label after the pull request was created, make sure to rerun the sha-checker. The following commits need to be accounted for:
+            Please review the commits in order of oldest to newest (bottom to top). Once you have implemented the corresponding updates, copy-paste the sha of the commit you last covered in ['.lastcommsha'](https://github.com/WyliodrinEmbeddedIoT/tockloader-rs/tree/main/.github/.lastcommsha). Make sure to label any PRs addressing the commits in this list with 'EXCLUSIVE LABEL'. The following commits need to be accounted for:
           PINNED: false
           CLOSE_PREVIOUS: true
-
-          
-
