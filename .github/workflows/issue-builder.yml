@@ -22,7 +22,7 @@ jobs:
         run: |
           TARGET_FILE="libraries/tock-tbf"
           
-          RESPONSE=$(curl -s "https://api.github.com/repos/${UPSTREAM}/commits?path=$TARGET_FILE&sha=master")
+          RESPONSE=$(curl -s "https://api.github.com/repos/${UPSTREAM}/commits?path=$TARGET_FILE&sha=main")
           # Find sha of last commit
           COMMIT_SHA=$(echo "$RESPONSE" | jq -r ".[0].sha")
           echo "Commit sha: $COMMIT_SHA"
