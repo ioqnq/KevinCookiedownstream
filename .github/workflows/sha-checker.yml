@@ -46,6 +46,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           UPSTREAM: "ioqnq/KevinCookieCompany.com"
-          DOWNSTREAM: "ioqnq/KevinCookiedownstream"
+          DOWNSTREAM: ${{ github.repository }}
         
           
