@@ -161,7 +161,7 @@ jobs:
           UPSTREAM: "ioqnq/KevinCookieCompany.com"
           DOWNSTREAM: ${{ github.repository }}
           TITLE: Bring updates from `tock-tbf` to `tbf-parser`
-          ASSIGNEES: unassigned
+          ASSIGNEES:
           LABELS: D3-TBF PARSER,P1-CRITICAL,EXCLUSIVE LABEL
           BODY: |
             Please review the commits in order of oldest to newest (top to bottom). Once you have implemented the corresponding updates, copy-paste the sha of the commit you last covered in the text file at (path). Make sure to label any PRs addressing the commits in this list with `EXCLUSIVE LABEL` (if you added this label after the pull request was created, make sure to rerun the sha-checker. The following commits need to be accounted for:
